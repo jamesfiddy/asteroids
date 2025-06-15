@@ -9,8 +9,11 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    score_font = pygame.font.SysFont(None, 40)
+    
     clock = pygame.time.Clock()
     dt = 0
+    score = 0
 
     # Create groups of objects for Pygame
     updatable = pygame.sprite.Group()
@@ -43,8 +46,12 @@ def main():
                 if asteroid.collision(shot):
                     asteroid.split()
                     shot.kill()
+                    score += 1
+
+        s = score_font.render("Score: " + str(score), True, "White")
 
         screen.fill((0,0,0))
+        screen.blit(s, (25,25))
 
         for d in drawable:
             d.draw(screen)
@@ -52,7 +59,7 @@ def main():
         pygame.display.flip()
         
         # Limit frame rate to 60fps
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(180) / 1000
         
 if __name__ == "__main__":
     main()
