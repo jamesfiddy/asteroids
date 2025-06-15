@@ -1,5 +1,6 @@
 import pygame
 import json
+import os
 from constants import *
 from player import *
 from asteroid import *
@@ -7,7 +8,9 @@ from asteroidfield import *
 from shot import *
 
 def main():
+    pygame.mixer.pre_init(44100, -16, 2, 512)
     pygame.init()
+    pygame.mixer.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     score_font = pygame.font.SysFont(None, 40)
@@ -21,6 +24,9 @@ def main():
     with open('data.json', 'r') as file:
         saved_data = json.load(file)
         high_score = saved_data['high_score']
+
+    # Create the explosion sound effect
+    explode_sound = pygame.mixer.Sound("./assets/sounds/explosion.mp3")
     
     clock = pygame.time.Clock()
     dt = 0
@@ -65,6 +71,7 @@ def main():
             
                 for shot in shots:
                     if asteroid.collision(shot):
+                        explode_sound.play()
                         asteroid.split()
                         shot.kill()
                         score += 1
